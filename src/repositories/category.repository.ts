@@ -10,6 +10,7 @@ export class CategoryRepository extends DefaultCrudRepository<
 > {
   constructor(
     @inject('datasources.esv7') dataSource: Esv7DataSource,
+    
   ) {
     super(Category, dataSource);
   }

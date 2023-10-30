@@ -7,6 +7,8 @@ import {
   ResponseObject,
 } from '@loopback/rest';
 import { ClassDecoratorFactory, MetadataInspector } from '@loopback/metadata';
+import {CategoryRepository} from '../repositories';
+import {repository} from '@loopback/repository';
 
 /**
  * OpenAPI response for ping()
@@ -53,7 +55,11 @@ function myClassDecorator(spec: MyclassMetaData): ClassDecorator{
 
 @myClassDecorator({name: 'Gardene'})
 export class PingController {
-  constructor(@inject(RestBindings.Http.REQUEST) private req: Request) {}
+  constructor(
+  @inject(RestBindings.Http.REQUEST) private req: Request,
+  @repository(CategoryRepository) private categoryRepo: CategoryRepository
+  ) {
+  }
 
   // Map to `GET /ping`
   @get('/ping')
@@ -67,7 +73,18 @@ export class PingController {
       headers: Object.assign({}, this.req.headers),
     };
   }
+  @get('/categories') // Adicione esta anotação para mapear a rota corretamente
+  async index(){
+    await this.categoryRepo.create({
+      id: '1',
+      name: 'minha primeira categoria',
+      description: 'minha descrição',
+    });
+    return this.categoryRepo.find();
+  }
+
 }
+
 
 const meta = MetadataInspector.getClassMetadata<MyclassMetaData>(
   'metadata-data-my-class-decorator',

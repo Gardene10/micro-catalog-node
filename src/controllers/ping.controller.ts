@@ -6,7 +6,7 @@ import {
   response,
   ResponseObject,
 } from '@loopback/rest';
-import { ClassDecoratorFactory, MetadataInspector } from '@loopback/metadata';
+//import { ClassDecoratorFactory, MetadataInspector } from '@loopback/metadata';
 import {CategoryRepository} from '../repositories';
 import {repository} from '@loopback/repository';
 
@@ -36,7 +36,7 @@ const PING_RESPONSE: ResponseObject = {
     },
   },
 };
-
+/*
 interface MyclassMetaData {
   name: string;
 }
@@ -47,19 +47,20 @@ function myClassDecorator(spec: MyclassMetaData): ClassDecorator{
   )
   return factory.create()
 
-}
+} */
 
 /**
  * A simple controller to bounce back http requests
  */
 
-@myClassDecorator({name: 'Gardene'})
+//@myClassDecorator({name: 'Gardene'})
 export class PingController {
   constructor(
   @inject(RestBindings.Http.REQUEST) private req: Request,
   @repository(CategoryRepository) private categoryRepo: CategoryRepository
   ) {
   }
+
 
   // Map to `GET /ping`
   @get('/ping')
@@ -78,7 +79,9 @@ export class PingController {
     await this.categoryRepo.create({
       id: '1',
       name: 'minha primeira categoria',
-      description: 'minha descrição',
+      createdAt: new Date(),
+      updatedAt: new Date()
+
     });
     return this.categoryRepo.find();
   }
@@ -86,8 +89,9 @@ export class PingController {
 }
 
 
+/*
 const meta = MetadataInspector.getClassMetadata<MyclassMetaData>(
   'metadata-data-my-class-decorator',
   PingController
 )
-console.log(meta)
+console.log(meta) */

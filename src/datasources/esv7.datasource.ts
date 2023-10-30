@@ -7,12 +7,38 @@ import {juggler} from '@loopback/repository';
   index: 'catalog',
   version: 7,  //mudei apiVersion: "7"
   //defaultSize: '', //is required do a export but i dont did
+  debug: process.env.APP_ENV === 'dev',
   configuration: {
     "node": process.env.ELASTIC_SEARCH_HOST,
     "requestTimeout": process.env.ELASTIC_SEARCH_REQUEST_TIMEOUT,
     "pingTimeout": process.env.ELASTIC_SEARCH_PING_TIMEOUT
     },
     "mappingProperties": {
+      "docType": {
+        "type": "keyword"
+      },
+      "id": {
+        "type": "keyword",
+      },
+      "name": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignoreAbove": 256
+          }
+        }
+      },
+      "isActive": {
+        "type": "boolean"
+      },
+      "createdAt": {
+        "type": "date"
+      },
+      "updatedAt": {
+        "type": "date"
+      }
+
 
     }
 };
@@ -26,7 +52,7 @@ export class Esv7DataSource extends juggler.DataSource
   implements LifeCycleObserver {
   static dataSourceName = 'esv7';
   static readonly defaultConfig = config;
-  
+
   constructor(
     @inject('datasources.config.esv7', {optional: true})
     dsConfig: object = config,
